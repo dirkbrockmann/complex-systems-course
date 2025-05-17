@@ -1,0 +1,21 @@
+---
+import { nextMarginNoteNumber, resetMarginNoteCounter } from '../utils/margin-note-counter.js';
+const { reset = false, numbered = false } = Astro.props;
+
+if (reset) {
+    resetMarginNoteCounter();
+}
+const number = numbered ? nextMarginNoteNumber() : null;
+---
+
+{
+    numbered && (
+        <sup id={'ref-' + number} class="align-text-top text-xs">
+            {number}
+        </sup>
+    )
+}
+<div id={numbered ? 'marginnote-' + number : undefined} class="marginnote m-0 md:mr-[-53%] md:float-right md:clear-end md:w-[53%] px-8 pb-4">
+    {numbered && <span class="align-super text-xs -ml-4">{number}</span>}
+    <slot />
+</div>

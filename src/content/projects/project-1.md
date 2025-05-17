@@ -1,12 +1,14 @@
 ---
+id: gront
 title: 'EcoBuddy: Sustainable Living App'
 description: EcoBuddy is a mobile app that gamifies sustainable living. Users can set eco-friendly goals, track their carbon footprint, and earn virtual rewards for adopting environmentally conscious habits.
-publishDate: 'Jan 02 2024'
+publishDate: 'Jan 02 2024' 
 seo:
   image:
     src: '/project-1.jpg'
     alt: Project preview
 ---
+
 
 ![Project preview](/project-1.jpg)
 
@@ -14,6 +16,13 @@ seo:
 
 **Project Overview:**
 EcoBuddy is a revolutionary mobile application designed to make sustainable living accessible, engaging, and rewarding. With a focus on gamification and real-world impact, EcoBuddy encourages users to adopt eco-friendly habits, reduce their carbon footprint, and contribute to a healthier planet.
+<MarginFigure src="../../public/project-7.jpg" alt="CryptoTrader Dashboard">
+  
+    **asdfasdf**: a user-friendly and feature-rich dashboard that consolidates real-time data from various cryptocurrency exchanges.
+2. Provide tools for users to analyze market trends, track their portfolio performance, and make informed investment decisions.
+3. Create a secure and efficient platform that ensures users have a holistic view of their cryptocurrency holdings.
+  
+</MarginFigure>
 
 ## Objectives
 

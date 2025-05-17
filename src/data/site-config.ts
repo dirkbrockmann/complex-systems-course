@@ -4,6 +4,12 @@ export type Image = {
     caption?: string;
 };
 
+export type Author = {
+    name: string;
+    image?: Image;
+    url?: string;
+}
+
 export type Link = {
     text: string;
     href: string;
@@ -24,6 +30,7 @@ export type Subscribe = {
 
 export type SiteConfig = {
     website: string;
+    author: Author;
     logo?: Image;
     title: string;
     subtitle?: string;
@@ -39,79 +46,89 @@ export type SiteConfig = {
 };
 
 const siteConfig: SiteConfig = {
-    website: 'https://example.com',
-    title: 'Dante',
-    subtitle: 'Minimal Astro.js theme',
-    description: 'Astro.js and Tailwind CSS theme for blog and portfolio by justgoodui.com',
+    logo: {
+        light: '/logo.png',
+        dark: '/logo_dark.png',
+        alt: 'SynoSys'
+    },
+    website: 'https://synosys.github.io/teaching/complex-systems-biology/',
+    title: 'Introduction to Complex Systems in Biology (and Beyond)',
+    author: {
+        name: 'Dirk Brockmann',
+        image: {
+            src: '/author.jpg',
+            alt: 'Dirk Brockmann'
+        },
+        url: 'https://synosys.github.io'
+    },
+    subtitle: 'A course by Dirk Brockmann',
+    description: '',
     image: {
-        src: '/dante-preview.jpg',
-        alt: 'Dante - Astro.js and Tailwind CSS theme'
+        src: '/complexity.png',
+        alt: 'Complex Systems in Biology'
     },
     headerNavLinks: [
         {
             text: 'Home',
             href: '/'
         },
-        {
-            text: 'Projects',
-            href: '/projects'
-        },
-        {
-            text: 'Blog',
-            href: '/blog'
-        },
-        {
-            text: 'Tags',
-            href: '/tags'
-        }
-    ],
-    footerNavLinks: [
-        {
-            text: 'About',
-            href: '/about'
-        },
+        // {
+        //     text: 'Projects',
+        //     href: '/projects'
+        // },
+        // {
+        //     text: 'Blog',
+        //     href: '/blog'
+        // },
+        // {
+        //     text: 'Tags',
+        //     href: '/tags'
+        // },
         {
             text: 'Contact',
             href: '/contact'
         },
         {
+            text: 'Explorables',
+            href: 'https://complexity-explorables.org'
+        }
+    ],
+    footerNavLinks: [
+
+        {
+            text: 'Contact',
+            href: '/contact'
+        }, {
             text: 'Terms',
             href: '/terms'
-        },
-        {
-            text: 'Download theme',
-            href: 'https://github.com/JustGoodUI/dante-astro-theme'
         }
     ],
     socialLinks: [
+
         {
-            text: 'Dribbble',
-            href: 'https://dribbble.com/'
-        },
-        {
-            text: 'Instagram',
-            href: 'https://instagram.com/'
-        },
-        {
-            text: 'X/Twitter',
-            href: 'https://twitter.com/'
+            text: 'Center Synergy of Systems',
+            href: 'https://synosys.github.io'
+        }, {
+            text: 'TU Dresden',
+            href: 'https://tu-dresden.de'
         }
     ],
+
     hero: {
-        title: 'Hi There & Welcome to My Corner of the Web!',
-        text: "I'm **Ethan Donovan**, a web developer at Amazing Studio, dedicated to the realms of collaboration and artificial intelligence. My approach involves embracing intuition, conducting just enough research, and leveraging aesthetics as a catalyst for exceptional products. I have a profound appreciation for top-notch software, visual design, and the principles of product-led growth. Feel free to explore some of my coding endeavors on <a href='https://github.com/JustGoodUI/dante-astro-theme'>GitHub</a> or follow me on <a href='https://twitter.com/justgoodui'>Twitter/X</a>.",
+        title: 'Welcome!', // need to update this
+        text: "brüllafen alarm ist auch was schönes, vor allem morgens", // need to update this
         image: {
-            src: '/hero.jpeg',
-            alt: 'A person sitting at a desk in front of a computer'
+            src: '/hero.jpeg', // need to update this
+            alt: 'A person sitting at a desk in front of a computer' // need to update this
         },
-        actions: [
+        actions: [ // get rid of this
             {
                 text: 'Get in Touch',
                 href: '/contact'
             }
         ]
     },
-    subscribe: {
+    subscribe: { // get rid of this
         title: 'Subscribe to Dante Newsletter',
         text: 'One update per week. All the latest posts directly in your inbox.',
         formUrl: '#'

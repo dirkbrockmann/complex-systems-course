@@ -1,15 +1,17 @@
 @import '@fontsource-variable/inter' layer(base);
 @import '@fontsource-variable/newsreader' layer(base);
+/*@import '@fontsource-variable/eb-garamond' layer(base);*/
 @import '@fontsource-variable/newsreader/wght-italic.css' layer(base);
 
+@import 'katex/dist/katex.min.css';
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-    --text-main: #171717;
-    --bg-main: #f2f1ec;
+    --text-main: #111111;
+    --bg-main: #fffff8;
     --bg-muted: #eae9e1;
     --border-main: #171717;
 }
@@ -19,7 +21,20 @@ html.dark {
     --bg-muted: #242424;
     --border-main: #f2f1ec;
 }
-
+/*
+:root {
+    --text-main: #111111;
+    --bg-main: #fffff8;
+    --bg-muted: #eae9e1;
+    --border-main: #171717;
+}
+html.dark {
+    --text-main: #f2f1ec;
+    --bg-main: #171717;
+    --bg-muted: #242424;
+    --border-main: #f2f1ec;
+}
+*/
 /* Cyan */
 /*
 :root {
@@ -55,6 +70,7 @@ html.dark {
 @theme inline {
     --font-sans: 'Inter Variable', sans-serif;
     --font-serif: 'Newsreader Variable', serif;
+    /*--font-serif: 'EB Garamond Variable', serif;*/
     --text-color-main: var(--text-main);
     --background-color-main: var(--bg-main);
     --background-color-muted: var(--bg-muted);
@@ -79,20 +95,47 @@ html.dark {
         --tw-prose-th-borders: var(--border-color-main);
         --tw-prose-td-borders: var(--border-color-main);
     }
-
-    .prose a {
-        @apply underline font-normal decoration-1 underline-offset-2 decoration-dashed hover:decoration-solid;
+    
+    .prose {
+        @apply font-serif font-medium md:w-[65%] text-xl;
     }
 
-    .prose :where(h1, h2, h3, h4, h5, h6) {
-        @apply font-serif font-medium;
+    .prose a {
+        @apply underline font-semibold decoration-1 underline-offset-2 decoration-solid hover:decoration-dashed;
+    }
+
+    .prose :where(h2, h3, h4, h5, h6) {
+        @apply font-normal italic;
+    }
+
+    .prose figure figcaption p {
+        @apply text-left text-base/5;
+    }
+
+    .prose .marginnote
+     {
+        @apply text-left text-base/5;
+    }
+    
+    .prose :where(ul, ol) {
+        @apply w-[90%];
     }
 
     .prose :where(code, strong) {
-        @apply font-medium;
+        @apply font-bold;
     }
 
-    .prose blockquote {
-        @apply font-serif font-normal italic border-none pl-0 text-[1.375em] leading-snug sm:text-[1.66667em];
+    .prose p {
+        @apply text-justify;
     }
+    .prose blockquote, .prose blockquote p {
+        @apply mx-[10%] font-normal italic text-left border-none pl-0 my-0 text-xl;
+    }
+
+    
+
+}   
+
+.katex {
+	    font-size: 1em;
 }

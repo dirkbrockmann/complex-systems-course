@@ -1,5 +1,5 @@
-import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { defineCollection, z } from 'astro:content';
 
 const seoSchema = z.object({
     title: z.string().min(5).max(120).optional(),
@@ -30,7 +30,8 @@ const pages = defineCollection({
     loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/pages' }),
     schema: z.object({
         title: z.string(),
-        seo: seoSchema.optional()
+        seo: seoSchema.optional(),
+        showHeader: z.boolean().default(false),
     })
 });
 
@@ -45,4 +46,14 @@ const projects = defineCollection({
     })
 });
 
-export const collections = { blog, pages, projects };
+const lecturenotes = defineCollection({
+    loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/lecture-notes' }),
+    schema: z.object({
+        title: z.string(),
+        description: z.string().optional(),
+        publishDate: z.coerce.date(),
+        seo: seoSchema.optional()
+    })
+});
+
+export const collections = { blog, pages, projects, lecturenotes };

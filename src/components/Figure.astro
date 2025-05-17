@@ -1,0 +1,14 @@
+---
+const { src, alt, srcDark } = Astro.props;
+---
+
+<figure class="m-0 not-prose">
+    <figcaption class="hidden md:block md:mr-[-53%] md:float-right md:clear-end md:w-[53%] px-6">
+        <slot />
+    </figcaption>
+    <img src={src} alt={alt} class="w-full h-auto py-0 block dark:hidden" />
+    {srcDark && <img src={srcDark} alt={alt} class="w-full h-auto py-0 hidden dark:block" />}
+    <figcaption class="block md:hidden px-6 my-4">
+        <slot />
+    </figcaption>
+</figure>

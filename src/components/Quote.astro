@@ -1,0 +1,13 @@
+---
+// filepath: /Users/zwerg/Coding/astro/dante/src/components/Quote.astro
+export type Props = {
+    author: string;
+    cite: string;
+};
+const { author, cite } = Astro.props;
+---
+
+<blockquote>
+    <slot />
+    <footer class="not-prose font-normal text-right not-italic text-base mt-2">— {author} <span class="italic">{cite}</span></footer>
+</blockquote>
