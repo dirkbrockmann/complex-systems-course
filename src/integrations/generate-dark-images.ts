@@ -1,21 +1,22 @@
 import type { AstroIntegration } from 'astro';
 import fs, { readdirSync, statSync } from 'fs';
-import { basename, extname, join, relative } from 'path';
+import { basename, extname, join } from 'path';
 import sharp from 'sharp';
-import { fileURLToPath } from 'url';
 import { excludeFromDarkImageProcessing } from '../config/images.config';
 
 const supportedExtensions = ['.png', '.jpg', '.jpeg', '.webp'];
 const forceMode = process.argv.includes('--force');
 const threshold = 240;
 
+const assetsDir = join(process.cwd(), 'src/assets');
+const generatedDir = join(assetsDir, 'generated');
+
 export default function generateDarkImages(): AstroIntegration {
     return {
         name: 'generate-dark-images',
         hooks: {
-            'astro:build:done': async ({ dir }) => {
-                const distPath = fileURLToPath(dir);
-                await generateImages(distPath);
+            'astro:build:setup': async () => {
+                await generateImages();
             },
             'astro:server:start': async () => {
                 await generateImages();
@@ -24,9 +25,9 @@ export default function generateDarkImages(): AstroIntegration {
     };
 }
 
-async function generateImages(distDir?: string) {
-    const publicDir = join(process.cwd(), 'public');
-    const files = getAllFiles(publicDir);
+async function generateImages() {
+    await fs.promises.mkdir(generatedDir, { recursive: true });
+    const files = getAllFiles(assetsDir);
 
     for (const filePath of files) {
         const ext = extname(filePath).toLowerCase();
@@ -40,12 +41,11 @@ async function generateImages(distDir?: string) {
             excludeFromDarkImageProcessing.includes(fileName)
         ) continue;
 
-        const dir = filePath.slice(0, -fileName.length);
         const base = basename(filePath, ext);
         const transparentName = `${base}_transparent${ext}`;
         const darkName = `${base}_dark${ext}`;
-        const transparentPath = join(dir, transparentName);
-        const darkPath = join(dir, darkName);
+        const transparentPath = join(generatedDir, transparentName);
+        const darkPath = join(generatedDir, darkName);
 
         const needsTransparent = forceMode || !fileExists(transparentPath);
         const needsDark = forceMode || !fileExists(darkPath);
@@ -89,8 +89,7 @@ async function generateImages(distDir?: string) {
                     .toFormat(ext.slice(1) as keyof sharp.FormatEnum)
                     .toFile(transparentPath);
 
-                console.log(`✅ Created ${relative(process.cwd(), transparentPath)}`);
-                if (distDir) await copyToDist(transparentPath, publicDir, distDir);
+                console.log(`✅ Created ${transparentPath.replace(process.cwd() + '/', '')}`);
             }
 
             if (needsDark) {
@@ -104,8 +103,7 @@ async function generateImages(distDir?: string) {
                     .toFormat(ext.slice(1) as keyof sharp.FormatEnum)
                     .toFile(darkPath);
 
-                console.log(`✅ Created ${relative(process.cwd(), darkPath)}`);
-                if (distDir) await copyToDist(darkPath, publicDir, distDir);
+                console.log(`✅ Created ${darkPath.replace(process.cwd() + '/', '')}`);
             }
 
         } catch (err) {
@@ -128,14 +126,4 @@ function fileExists(path: string): boolean {
     } catch {
         return false;
     }
-}
-
-async function copyToDist(filePath: string, publicDir: string, distDir: string) {
-    const relPath = relative(publicDir, filePath);
-    const destPath = join(distDir, relPath);
-    const destDir = join(distDir, relative(publicDir, filePath.slice(0, -basename(filePath).length)));
-
-    await fs.promises.mkdir(destDir, { recursive: true });
-    await fs.promises.copyFile(filePath, destPath);
-    console.log(`📁 Copied to dist: ${relative(process.cwd(), destPath)}`);
 }

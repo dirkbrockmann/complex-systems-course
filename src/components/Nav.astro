@@ -2,6 +2,7 @@
 import NavLink from './NavLink.astro';
 import ThemeToggle from './ThemeToggle.astro';
 import siteConfig from '../data/site-config';
+import { Image } from 'astro:assets';
 
 const navLinks = siteConfig.headerNavLinks || [];
 ---
@@ -41,8 +42,8 @@ const navLinks = siteConfig.headerNavLinks || [];
     </div>
     <div class="absolute right-0 top-3 z-10 md:top-7">
         <a href="/">
-            <img src={siteConfig.logo.light} alt={siteConfig.logo.alt || ''} class="max-h-12 block dark:hidden" />
-            <img src={siteConfig.logo.dark} alt={siteConfig.logo.alt || ''} class="max-h-12 hidden dark:block" />
+            <img src={siteConfig.logo.src.src} alt={siteConfig.logo.alt || ''} class="max-h-12 block dark:hidden" />
+            <img src={siteConfig.logoDark.src.src} alt={siteConfig.logoDark.alt || ''} class="max-h-12 hidden dark:block" />
         </a>
     </div>
 </nav>

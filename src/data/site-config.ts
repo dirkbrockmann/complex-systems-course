@@ -1,5 +1,11 @@
+import type { ImageMetadata } from 'astro:assets';
+import { default as complexityImg, default as heroImg } from '../assets/complexity.png';
+import authorImg from '../assets/dirk.png';
+import logoDark from '../assets/generated/logo_dark.png';
+import logoLight from '../assets/logo.png';
+
 export type Image = {
-    src: string;
+    src: ImageMetadata;
     alt?: string;
     caption?: string;
 };
@@ -47,16 +53,19 @@ export type SiteConfig = {
 
 const siteConfig: SiteConfig = {
     logo: {
-        light: '/logo.png',
-        dark: '/logo_dark.png',
+        src: logoLight,
         alt: 'SynoSys'
+    },
+    logoDark: {
+        src: logoDark,
+        alt: 'SynoSys (Dark)'
     },
     website: 'https://synosys.github.io/teaching/complex-systems-biology/',
     title: 'Introduction to Complex Systems in Biology (and Beyond)',
     author: {
         name: 'Dirk Brockmann',
         image: {
-            src: '/author.jpg',
+            src: authorImg,
             alt: 'Dirk Brockmann'
         },
         url: 'https://synosys.github.io'
@@ -64,7 +73,7 @@ const siteConfig: SiteConfig = {
     subtitle: 'A course by Dirk Brockmann',
     description: '',
     image: {
-        src: '/complexity.png',
+        src: complexityImg,
         alt: 'Complex Systems in Biology'
     },
     headerNavLinks: [
@@ -115,23 +124,12 @@ const siteConfig: SiteConfig = {
     ],
 
     hero: {
-        title: 'Welcome!', // need to update this
-        text: "brüllafen alarm ist auch was schönes, vor allem morgens", // need to update this
+        title: 'Welcome!',
+        text: "brüllafen alarm ist auch was schönes, vor allem morgens",
         image: {
-            src: '/hero.jpeg', // need to update this
-            alt: 'A person sitting at a desk in front of a computer' // need to update this
-        },
-        actions: [ // get rid of this
-            {
-                text: 'Get in Touch',
-                href: '/contact'
-            }
-        ]
-    },
-    subscribe: { // get rid of this
-        title: 'Subscribe to Dante Newsletter',
-        text: 'One update per week. All the latest posts directly in your inbox.',
-        formUrl: '#'
+            src: heroImg,
+            alt: 'A person sitting at a desk in front of a computer'
+        }
     },
     postsPerPage: 8,
     projectsPerPage: 8
