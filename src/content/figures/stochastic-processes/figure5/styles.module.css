@@ -1,0 +1,30 @@
+.agent {
+    fill: none;
+    stroke:black;
+    stroke-width:1px;
+    opacity:0.2;
+}
+
+.agent.singular {
+    fill: none;
+    stroke:darkred;
+    stroke-width:2px;
+    opacity:1;
+}
+
+@media (prefers-color-scheme: dark) {
+    .agent {
+        stroke: white;
+    }
+    .agent.singular {
+        stroke: white;
+        opacity: 1;
+    }
+}
+
+
+
+.axis{
+    font-family:'Newsreader Variable', serif;
+}
+

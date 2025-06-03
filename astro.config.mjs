@@ -8,6 +8,9 @@ import siteConfig from './src/data/site-config';
 import generateDarkImages from './src/integrations/generate-dark-images';
 
 
+import react from '@astrojs/react';
+
+
 // https://astro.build/config
 export default defineConfig({
     site: siteConfig.website,
@@ -25,5 +28,5 @@ export default defineConfig({
     vite: {
         plugins: [tailwindcss()]
     },
-    integrations: [mdx(), sitemap(), generateDarkImages()]
+    integrations: [mdx(), sitemap(), generateDarkImages(), react()]
 });

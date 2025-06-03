@@ -1,0 +1,19 @@
+---
+import { getCollection } from 'astro:content';
+import TutorialPreview from '../../components/TutorialPreview.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { sortItemsByDateDesc } from '../../utils/data-utils';
+
+const notes = (await getCollection('tutorials')).sort(sortItemsByDateDesc);
+const portfolio = notes; // Use the entire collection
+---
+
+<BaseLayout
+    title="Notes"
+    description="Explore a diverse portfolio showcasing my passion and expertise"
+    image={{ src: '/dante-preview.jpg', alt: 'The preview of the site' }}
+    showHeader={true}
+>
+    <h1 class="mb-12 text-2xl leading-tight font-serif italic sm:mb-16 sm:text-4xl">Tutorials</h1>
+    {portfolio.map((tutorial) => <TutorialPreview tutorial={tutorial} class="mb-10 sm:mb-12" />)}
+</BaseLayout>

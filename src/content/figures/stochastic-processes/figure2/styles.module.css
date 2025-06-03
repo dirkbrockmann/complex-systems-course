@@ -1,0 +1,21 @@
+.agent {
+    fill: black;
+}
+
+.axis{
+    font-family:'Newsreader Variable', serif;
+}
+
+.plotline{
+    fill:none;
+    stroke:darkred;
+    stroke-width:5px;
+}
+@media (prefers-color-scheme: dark) {
+    .agent {
+        fill: white;
+    }
+    .plotline {
+        stroke: white;
+    }
+}

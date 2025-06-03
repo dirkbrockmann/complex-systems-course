@@ -1,15 +1,24 @@
 ---
+// filepath: /Users/zwerg/Coding/astro/dante/src/components/Figure.astro
 import { Image } from 'astro:assets';
-const { src, alt, srcDark } = Astro.props;
+const { src, alt, srcDark, margin = false } = Astro.props;
 ---
 
-<figure class="m-0 not-prose">
-    <figcaption class="hidden md:block md:mr-[-53%] md:float-right md:clear-end md:w-[53%] px-6">
-        <slot />
-    </figcaption>
-    <Image src={src} alt={alt} class="w-full h-auto py-0 block dark:hidden" />
+<figure class={margin ? 'm-0 md:mr-[-53%] md:float-right md:clear-end md:w-[53%] px-6' : 'm-0 not-prose'}>
+    {
+        !margin && (
+            <figcaption class="hidden md:block md:mr-[-53%] md:float-right md:clear-end md:w-[53%] px-6">
+                <slot />
+            </figcaption>
+        )
+    }
+
+<Image src={src} alt={alt} class="w-full h-auto py-0 block dark:hidden" />
     {srcDark && <Image src={srcDark} alt={alt} class="w-full h-auto py-0 hidden dark:block" />}
-    <figcaption class="block md:hidden px-6 my-4">
+
+
+    <figcaption class={margin ? 'block px-6 md:px-0 my-4' : 'block md:hidden px-6 my-4'}>
         <slot />
     </figcaption>
+
 </figure>

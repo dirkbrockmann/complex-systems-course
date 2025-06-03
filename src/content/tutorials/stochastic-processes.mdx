@@ -1,0 +1,517 @@
+---
+id: stochastic-processes
+title: 'Random Walks & Stochastic Processes'
+description: 'This tutorial provides as brief overview of random walks and stochastic processes,  stochastic differential equations, the central limit theorem and some other basic stuff.'
+publishDate: 'Jan 02 2025' 
+seo:
+  image:
+    src: '/complexity.png'
+    alt: Project preview
+---
+
+import Figure from '../../components/Figure.astro';
+import complexity from '../../assets/generated/complexity_transparent.png';
+import complexityDark from '../../assets/generated/complexity_dark.png';
+import Explorable from '../../components/Explorable.astro';
+import Fig1 from '../../content/figures/stochastic-processes/figure1';
+import Fig2 from '../../content/figures/stochastic-processes/figure2';
+import Fig3 from '../../content/figures/stochastic-processes/figure3';
+import Fig4 from '../../content/figures/stochastic-processes/figure4';
+import Fig5 from '../../content/figures/stochastic-processes/figure5';
+import Fig6 from '../../content/figures/stochastic-processes/figure6';
+
+{/* <Figure src={complexity} srcDark={complexityDark} alt="Complexity.">
+</Figure> */}
+
+
+
+
+## Why is everything so normal?
+
+Most people have heard of the _**normal distribution**_, the pdf of this
+distribution is a Gaussian function, specified by two parameters $\mu$ and $\sigma$:
+
+$$
+p(x;\mu,\sigma)=\frac{1}{ \sqrt {2\pi\sigma^{2}}}e ^ { -(x-\mu)^{2}/2\sigma ^{2}}
+$$
+
+You can check that $\int dx\,p(x;\mu,\sigma)=1$
+using that
+$$
+\int dx e^{-x ^{2}/2}=2\pi
+$$
+an identity which is worth memorizing. Even in times of the internet.
+The function is bell-shaped with a peak at $\mu$ and an approximate
+width of $\sigma$. 
+
+<Explorable id="figure_1" margin={true}>    
+    The shape of the **Gaussian** (red) and **Cauchy** (blue) distributions. They look very similar, but are quite different.
+    <Fig1 slot="figure" client:load id="gauss_cauchy"/>
+</Explorable>
+
+Now it's true that this pdf appears everywhere in science. But why?
+Why not for example the Cauchy distribution that looks like this
+$$
+p(x;\mu,\sigma)=\frac{1}{\pi}\left(\frac{\sigma}{\sigma^{2}+(x-\mu) ^{2}}\right)
+$$
+This is also a Bell-shaped curve with a maximum at $\mu$ and and
+a width that seems to be proportional to $\sigma$. It turns out that
+this pdf doesn't have a mean or a variance. But nevertheless, that
+can't be the reason why the Gaussian normal distribution is so widespread.
+
+## Sums of random variables
+
+Here's the reason why this is so. Let's look at set of random numbers
+$X_{n}$ with $n=1,.....,N$ and consider their sum
+$$
+Y_{N}=\sum_{n}^{N}X_{n}
+$$
+and let's say, for the sake of simplicy that all the $X_{n}$ are
+**_independent_** and drawn from the **_same distribution_**
+$p(x)$ which we assume to be **_even_** (this assumption isn't
+necessary but makes things easier):
+$$
+p(x)=p(-x).
+$$
+For an even pdf the mean is zero, so $\left\langle X\right\rangle =0$.
+Let's assume that $p(x)$ has some width
+$$
+\left\langle X^{2}\right\rangle =\sigma^{2}.
+$$
+Other than that, we make no assumptions concerning the shape of the
+distribution. Now we would like to compute the statistics of $Y_{N}$.
+First, the mean has to vanish as well because:
+$$
+\left\langle Y\right\rangle =\left\langle \sum_{n}^N X_{n}\right\rangle=\sum_{n}^{N}\left\langle X_{n}\right\rangle = 0.
+$$
+The variance is a bit more tedious to compute:
+$$
+\left\langle Y^2 \right\rangle =\sum_{n}^N \sum_{m} ^N \left\langle X_{n} X_{m} \right\rangle 
+$$
+$$
+=\sum_{n} ^N \sum _{m \neq n}^N \left\langle X_{n} X_{m} \right\rangle +\sum_{ m = n } ^N \left\langle X_{n} ^2 \right\rangle 
+$$
+$$
+=\sum_{n} ^N \sum_{m \neq n} ^N \left\langle X_{n} \right\rangle \left\langle X_{m} \right\rangle +\sum_{ m = n } ^N \sigma ^2
+$$
+$$
+= 0+N\sigma^{2}
+$$
+$$
+= N\sigma^{2}
+$$
+Here we first split the double sum into a double sum that omits
+the diagonal ($m=n$) and the sum that captures those elements. Because
+$X_{n}$ and $X_{m}$ are independent if $m\neq n$ the expectation
+$\left\langle X_{n}X_{m}\right\rangle $ factorizes. And because $\left\langle X_{n}\right\rangle =0$
+the first double some vanishes. What remains is the second diagonal
+terms that all contribute a $\sigma^{2}$. Nice. So the variance increases
+with $N$. 
+
+Now if we interpret the individual $X_{n}$ as random steps on the
+$x-$axis drawn from the pdf $p(x)$ then $Y$ is the position after
+$N$ steps. The quantity
+
+$$
+\sqrt{\left\langle Y^{2}\right\rangle }=\sqrt{N}\sigma
+$$
+is the expected distance from the origin after $N$ steps. So, a random
+walk like this one typically is a distance $\sqrt{N}\sigma$ away
+from the origin after $N$ steps. That means I need to wait 4 times
+longer to move away twice as far. 
+
+
+Now, although we discussed this in one dimension, the above result
+also holds in any dimension. A random walker that has taken $N$ steps
+is typically a distance $\sim\sqrt{N}$ away from the original starting
+point. You can see this in **Panel 2** that shows a cloud of random walkers
+initially at the origin and the root-mean-square $\sqrt{\left\langle Y^{2}\right\rangle }$
+of the position as a function of $N$.
+
+<Explorable id="figure_2" margin={false}>    
+    The **left** panel depicts the position of $M=1000$ random walkers that all 
+    start at the origin. In the **right** panel their mean distance to the origin 
+    is depicted and scales as $\sqrt{t}$ where $t$ is the number of steps.
+    <Fig2 slot="figure" client:load id="diffusion"/>
+</Explorable>
+
+
+## The central limit theorem
+
+There's more: We can define a new variable
+$$
+Z_{N}=Y_{N}/\sigma\sqrt{N}
+$$
+which is just the position devided by the scaling factor $\sigma\sqrt{N}$.
+Obviously the pdf for this random variable should depend on the specific
+functional properties of the pdf $p(x)$ of the single steps. However,
+as we increase the step number $N$ the pdf for $Z$ approaches a
+Gaussian and looks like this
+$$
+p(z)=\frac{1}{\sqrt{2\pi}}e^{-z ^{2}/2}.
+$$
+This is called the **central limit theorem**. Sloppily, we can
+say the sum of independent identically distributed random variables
+will be distributed like a Gaussian. So for the original $Y_{N}$
+variable this implies 
+$$
+p(y)=\frac{1}{\sqrt{2\pi\sigma ^{2} N}}e ^{ -y ^{2}/2\sigma ^{2} N}
+$$
+The central limit theorem is the reason why the Gaussian distribution
+is so abundant. Whenever we have increments that are independent or
+random forces that impact a system in one way or another, we can expect
+the outcome variable to be normally distributed. In a sense all the
+information and the structure in the statistics of the single steps,
+so all the functional characteristics in $p(x)$ are washed away.
+Again, this is also true in any dimension. Even if two different random
+walks, each defined by its own single step pdf, look initially very
+different, as $N$ increases the trajectories of the walks not only
+appear to look very similar but the statistics of the position always
+approaches a Gaussian distribution, see **the panel below** for a geometric interpretation
+of the central limit theorem in two dimensions.
+
+<Explorable id="figure_3" margin={false}>    
+    **The central limit theorem:** The simulation shows the trajectories of 
+    four different random walks that 
+    all start at the origin. Each random walk is characterized by a probability 
+    distribution $p(x,y)$ for making a single step as illustrated next to the toggles on the right. 
+    They are chosen to have identical variance. 
+    As the step number increases the geometric differences between 
+    the walks disappear and on large scales the walks are no longer distinguishable.
+    <Fig3 slot="figure" client:load id="central_limit"/>
+</Explorable>
+
+### Continuous Time
+
+In our interpretation we identified $n$ as a temporal variable, the
+step number. If we now say that 
+$$
+t_{N}=N\Delta t
+$$
+ we can perform a continuous time limit. We identify first
+$$
+Y(t_{N})=Y_{N}
+$$
+and when we look at the variance
+$$
+\left\langle Y_{N}^{2}\right\rangle =\left\langle Y(t_{N})^{2}\right\rangle =N\sigma^{2}
+$$
+we get
+$$
+\left\langle Y(t_{N})^{2}\right\rangle =t_{N}\sigma^{2}/\Delta t
+$$
+
+<Explorable id="figure_4" margin={true}>    
+    The solution $p(x,t)$ to the diffusion equation 
+    $\partial_{t}p(x,t)=D\partial_{x}^{2}p(x,t)$ for $D=1$ and an 
+    initially sharply peaked $p(x,0)$.
+    <Fig4 slot="figure" client:load id="diffusion_pdf"/>
+</Explorable>
+
+We can now let the number of steps $N\rightarrow\infty$ and $\Delta t\rightarrow0$
+keeping $t_{N}=t$ fixed. In this case we also have to decrease the
+variance of the single steps such that
+$$
+\sigma^{2}/\Delta t\rightarrow D
+$$
+which yields
+$$
+\left\langle Y(t)^{2}\right\rangle =Dt
+$$
+and the pdf becomes
+$$
+p(y,t)=\frac{1}{\sqrt{2\pi Dt}}e^{-y ^{2} /2Dt}
+$$
+where we have made the time dependence explicit in the arguments of
+the pdf. So this is a Bell curve that spreads out and the width increases
+as $\sqrt{t}$. It's a good practice to differentiate $p(x,t)$ (we
+now use the letter $x$ for the position) with respect to $t$ and
+twice with respect to $x$ because then we find that
+$$
+\partial_{t}p(x,t)=\frac{1}{2} D\partial_{x}^{2}p(x,t)
+$$
+which is the diffusion equation. Below, we will derive it in a different
+way. This equation is very important as it can be used as the foundation
+for more complex systems in which particles of different types diffuse
+in space and interact, eventually yielding reaction diffusion systems.
+
+
+
+
+
+## Stochastic differential equations
+
+### The Ornstein-Uhlenbeck process
+
+Now let's look at the 1D dynamical system
+$$
+\dot{x}=-kx=f(x)
+$$
+
+This is pretty much the simplest dynamical system we can think of.
+Physically this might describe a mass on a spring immersed in a viscous
+liquid like oil that yields an overdamped movement. It will always
+equilibrate to the $x=0$ stationary state. Let's aufdrösel this again
+$$
+x(t+\Delta t)=x(t)-\Delta t\times k\\,x(t)
+$$
+So in the small time interval the location changes by $-\Delta t\times k\\,x(t)$.
+Now let's assume that in this time interval the mass is exposed to
+millions, billions and trillions of elastic collisions with small
+molecules with small mass that transfer energy and momentum to the
+object and change the position randomly by very very tiny increments
+$\pm\delta$. Because of what we said above the pdf for the displacement
+$\Delta W$ is distributed like a Gaussian with a certain width and
+zero mean. The typical size of that displacement is given by
+$$
+\left\langle \left(\Delta W\right)^{2}\right\rangle =\sigma^{2}\Delta t
+$$
+because $\Delta t$ is the time interval that accumulates all the
+zillions of little kicks. So we think of the time evolution as
+$$
+x(t+\Delta t)=x(t)-\Delta t\times k\\,x(t)+\sigma\Delta W
+$$
+where the $\Delta W$ is drawn from a normal pdf with a variance of
+$\Delta t$:
+$$
+p(w)=\frac{1}{\sqrt{2\pi\Delta t}}e^{-w ^{2}/2\Delta t}
+$$
+Now we can make $\Delta t$ as small as we want as long as we guarantee
+that in this small time interval there are very many small kicks happening.
+Then we get
+$$
+dX=-kXdt+\sigma dW
+$$
+Note that we avoid deviding by $dt$. Some people do that. We don't.
+The reason for this is that it makes sense to talk about $dW$ but
+not about $dW/dt$.
+
+<Explorable id="figure_5" margin={false}>    
+    **The Ornstein-Uhlenbeck process:** This process is governed by one
+    of the simplest Langevin equations: $dX=- k X dt+\sigma dW$.A linear force
+    is forcing a particle back to the origin, with a force constant $k$. Gaussian noise
+    of strength $\sigma$ is driving the particle away from the origin.
+    <Fig5 slot="figure" client:load id="OUP"/>
+</Explorable>
+
+
+
+The process above is known as the **Ornstein-Uhlenbeck process**.
+You can explore it in **panel above**. And the equation above is called a _**stochastic
+differential equation**_ specifically a _**Langevin-equation**_.
+
+In the Ornstein-Uhlenbeck process, the position variable is driven
+towards the origin by the linear force term but wiggles around that
+stable stationary state, driven by the stochastic noise. The larger
+that noise strength $\sigma$ the more wiggle, the stronger the spring
+constant the smaller the wiggle. 
+
+### Stationary Ornstein-Uhlenbeck Process
+
+If you start an an ensemble of OUPs at some fixed position, say $x(0)=x_{0}$
+eventually all trajectories will equilibrate to s stationary distribution
+around the mean $\left\langle X(t)\right\rangle =0$. The variance
+is given by
+$$
+\left\langle X(t)^{2}\right\rangle =\sigma^{2}/2k
+$$
+so it increases with the noise strength and decreases with the strength
+of the linear forces. The distribution around the mean is Gaussian
+$$
+p(x)=\frac{1}{\sqrt{\pi\sigma ^{2}/k} }e^{ -k x ^{2}/\sigma ^{2}}
+$$
+and the autocorrelation function is given by
+$$
+\left\langle X(t)X(0)\right\rangle =\frac{\sigma ^{2} }{2k}e^{ -kt}
+$$
+in equilibrium. Note that the stationary distribution can be writen
+as
+$$
+p(x)=e^{ -2V(x)/\sigma ^{2}}
+$$
+where 
+$$
+V(x)=\frac{1}{2}kx^{2}
+$$
+is the potential function of the linear force $f(x)=-kx=-V^{\prime}(x)$.
+This is a general result. For example, if we look at...
+
+### ...the double well potential:
+
+In general a stochastic differential equations often comes in this
+shape
+$$
+dX=-kf(X)dt+\sigma dW
+$$
+where the $f(x)$ is the deterministic force. Let's look at this interesting
+example. First let's assume that we can compute the potential of the
+force $f(x)$ according to
+$$
+f(x)=-V^{\prime}(x)
+$$
+Let's say that $f(x)=kx-x^{3}$ with a parameter $k$ that can be
+positive or negative. The potential is therefore
+$$
+V(x)=-\frac{1}{2}kx ^{2} +\frac{1}{4}x^{4}
+$$
+Now, if we do an analysis of the deterministic system
+$$
+\dot{x}=kx-x^{3}=x(k-x ^{2} )
+$$
+we see that this system has either only one stable fixpoint if $k \< 0$
+that becomes unstable if $k>0$ and two additional stable fixpoints
+emerge, a pitchfork bifurcation. We can now run simulations of the
+system
+$$
+dX=(kx-x^{3})dt+\sigma dW
+$$
+to investigate the impact of noise. We find that trajectories, if
+$k>0$ either concentrate around one or the other stable fixpoint
+and wiggle around it. Also the stationary distribution will have two
+peaks, because it is given by
+$$
+p(x)\sim e^{2V(x)/\sigma ^{2} }
+$$
+A particle that is trapped in the basin of attraction of one fixpoint
+can move to the other by the noise that is driving the system. The
+larger the noise, the more frequent the excursions to the ``other
+side''. This also becomes easier as $k$ becomes smaller and smaller,
+eventually when $k<0$ the system only has one fixpoint at the origin
+and all trajectories will concentrate there.
+
+<Explorable id="figure_6" margin={false}>    
+    Diffusion in a double-well potential.
+    <Fig6 slot="figure" client:load id="double_well"/>
+</Explorable>
+
+
+## The Wiener Process
+
+What if $f=0$ ? In this case the Then the Langevin equation is particularly
+simple:
+$$
+dX=\sigma dW
+$$
+This means we have a process 
+$$
+X(t+\Delta t)=X(t)+\sigma\Delta W(t)
+$$
+So we are incrementing in a Gaussian increment every time, like a
+random walk in continuous time. This also means that at time $t$
+we have
+$$
+X(t)=\sigma W(t)
+$$
+where $W(t)$ is just the result of adding many Gaussian increments
+$$
+W(t)=\sum_{n}^{N}\Delta W(t)=\int_{0}^{\infty}dW.
+$$
+And in analogy to the random walk we have 
+$$
+\left\langle W^{2}(t)\right\rangle =t
+$$
+with a probability density
+$$
+p(w,t)=\frac{1}{\sqrt{2\pi t}}e^{-w ^{2} /2t}
+$$
+as we discussed before. The process $W(t)$ is known as the **Wiener
+process**.
+
+## Another road to the diffusion equation
+
+The spreading Gaussian, 
+$$
+p(x,t)=\frac{1}{\sqrt{2\pi tD}}e^{-x ^{2} /2tD}
+$$
+as mentioned earlier, fullfills the diffusion equation
+$$
+\partial_{t}p(x,t)=\frac {1}{2}D\partial_{x}^{2}p(x,t).
+$$
+Here's another way of deriving it.
+
+Let's say we split the line that defines the $x$ coordinate into
+intervals that we interpret as containers at locations $x_{n}=n\Delta x$
+and each container having a width $\Delta x$. Now let's assume that
+there are many particles distributed anywhere on the line. All the
+particles in the interval $\left[x_{n},x_{n}+\Delta x\right]$ belong
+to that container. We can count the particles in container $n$ and
+denote this numbner by $u_{n}=u(x_{n})$ . Because particles can move
+between containers, we have $u_{n}=u_{n}(t)$ or equivalently $u(x_{n})=u(x_{n},t)$.
+Now lets's assume that every particle at $n$ can randomly move to
+the container next door, so to $n+1$ and $n-1$ that means the container
+at $n$, in a small time interval $\Delta t$, may loose particles
+to the neighboring containers so that 
+$$
+\Delta u_{n}^{-}(t)=-\gamma u_{n}(t)\Delta t
+$$
+where $\gamma$ is a rate constant that quantifies at which rate particles
+are randomly moving to the neighboring sites. The concentration $u_{n}$
+can also increase due to incoming particles (from the left or the
+right) so that
+
+$$
+\Delta u_{n}^{+}(t+\Delta t)=\gamma u_{n+1}(t)\Delta t+\gamma u_{n+1}(t)\Delta t
+$$
+So we have
+$$
+u_{n}(t+\Delta t)=u_{n}(t)+\Delta u_{n}^{-}(t)+\Delta u_{n}^{+}(t)
+$$
+which reads
+$$
+u_{n}(t+\Delta t)=u_{n}(t)+\gamma\Delta t\times\left(u_{n+1}(t)\Delta t+u_{n-1}(t)\Delta t-2u_{n}(t)\right).
+$$
+Now this yields
+$$
+\partial \_{t} u(x \_{n} ,t) = \gamma \Delta x ^{2} \left( \frac{u(x \_{n} +\Delta x,t)-2u(x\_{n},t)+u(x\_{n}-\Delta x,t)}{\Delta x^{2} }\right)
+$$
+Now we we let
+$$
+\gamma\Delta x^{2}=D/2
+$$
+ and perform the limit $\Delta x\rightarrow0$ we get
+$$
+\partial_{t}u(x,t)=\frac{1}{2}D\partial_{x}^{2}u(x,t)
+$$
+which again is the diffusion equation. Here, however we derived it
+not looking at a single randomly moving particle but rather using
+particle numbers / concentrations.
+
+## Random Events - Poisson process
+
+Quite often, in dynamical processes we have a situation in which as
+time progresses random events occur. For example, let's say time is
+at $t=t_{0}$ and it advances to a later time $t_{0}+\Delta t$ where
+$\Delta t$ is as small as we like. Now let's assume that there's
+a small probability that in this time interval $\left[t_{0},t_{0}+\Delta t\right]$
+and event occurs, e.g. a collision of two particles, the birth of
+an animal, the death of an animal or the firing of neuronal spike.
+Let's call this probability
+$$
+p=\alpha\Delta t
+$$
+The proportionality constant $\alpha$ is called a probability rate.
+Now let's assume that every time we advance time by $\Delta t$ an
+event can occur. Let's ask: What is the probability density that an
+event doesn't occur for a time $T$ and occurs exactly in the time
+intervale $\left[t_{0},t_{0}+t+\Delta t\right]$. We can split the
+time-interval into $N$ small segments of duration $\Delta t$ so
+$N\Delta t=t$. The probability that no event occurs is
+$$
+\left(1-p\right)^{N}
+$$
+multiplied by the probability that the event occurs in $\left[t_{0},t_{0}+t+\Delta t\right]$
+which is $p$ so
+$$
+\left(1-p\right)^{N}p=\left(1-\alpha\Delta t\right)^{N}\alpha\Delta t
+$$
+$$
+=\left(1-\alpha t/N\right)^{N}\alpha\Delta t
+$$
+In the limit $N\rightarrow\infty$ this becomes
+$$
+p(t)dt=\alpha e^{-\alpha t}dt
+$$
+So the probability density for the time-interval between events is
+an exponential pdf. This process is known as the Poisson process.
+
+

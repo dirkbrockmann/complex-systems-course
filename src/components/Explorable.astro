@@ -1,0 +1,24 @@
+---
+// filepath: /Users/zwerg/Coding/astro/dante/src/components/Explorable.astro
+const { id, margin = false, className = 'p-0' } = Astro.props;
+---
+
+<figure class={margin ? 'm-0 md:mr-[-53%] md:float-right md:clear-end md:w-[53%] px-6 not-prose' : 'm-0 not-prose'}>
+    {
+        !margin && (
+            <figcaption class="hidden md:block md:mr-[-53%] md:float-right md:clear-end md:w-[53%] px-6">
+                <slot />
+            </figcaption>
+        )
+    }
+
+    <!-- Slot for the interactive figure -->
+    <div id={id} class={className}>
+        <slot name="figure" />
+    </div>
+
+    <!-- Slot for the caption (mobile view) -->
+    <figcaption class={margin ? 'block px-6 md:px-0 my-0 pt-2' : 'block md:hidden px-6 my-4'}>
+        <slot />
+    </figcaption>
+</figure>

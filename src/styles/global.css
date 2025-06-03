@@ -136,6 +136,12 @@ html.dark {
 
 }   
 
-.katex {
+
+.prose .katex {
 	    font-size: 1em;
 }
+
+.katex-display .katex {
+	    font-size: 1.0em;
+}
+

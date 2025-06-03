@@ -89,10 +89,10 @@ const siteConfig: SiteConfig = {
         //     text: 'Blog',
         //     href: '/blog'
         // },
-        // {
-        //     text: 'Tags',
-        //     href: '/tags'
-        // },
+        {
+            text: 'Tutorials',
+            href: '/tutorials'
+        },
         {
             text: 'Contact',
             href: '/contact'

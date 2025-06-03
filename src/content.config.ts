@@ -46,8 +46,8 @@ const projects = defineCollection({
     })
 });
 
-const lecturenotes = defineCollection({
-    loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/lecture-notes' }),
+const tutorials = defineCollection({
+    loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/tutorials' }),
     schema: z.object({
         title: z.string(),
         description: z.string().optional(),
@@ -56,4 +56,4 @@ const lecturenotes = defineCollection({
     })
 });
 
-export const collections = { blog, pages, projects, lecturenotes };
+export const collections = { blog, pages, projects, tutorials };

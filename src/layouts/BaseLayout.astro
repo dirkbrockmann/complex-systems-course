@@ -15,10 +15,46 @@ const { showHeader = true, ...head } = Astro.props;
     <head>
         <BaseHead {...head} />
         <script>
-            if (localStorage.theme === 'dark') {
-                document.documentElement.classList.add('dark');
-            }
+            (function () {
+                try {
+                    var isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    if (isDark) {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                    // Listen for system theme changes and update live
+                    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function (e) {
+                        if (e.matches) {
+                            document.documentElement.classList.add('dark');
+                        } else {
+                            document.documentElement.classList.remove('dark');
+                        }
+                        if (typeof syncWidgetDarkMode === 'function') {
+                            syncWidgetDarkMode(e.matches);
+                        }
+                    });
+                } catch (e) {}
+            })();
         </script>
+        <script>
+            document.addEventListener('astro:after-swap', () => {
+                const getSystemTheme = () => (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                const setTheme = (theme) => {
+                    if (theme === 'dark') {
+                        document.documentElement.classList.add('dark');
+                    } else {
+                        document.documentElement.classList.remove('dark');
+                    }
+                    if (typeof syncWidgetDarkMode === 'function') {
+                        syncWidgetDarkMode(theme === 'dark');
+                    }
+                };
+                let theme = getSystemTheme();
+                setTheme(theme);
+            });
+        </script>
+
         <ClientRouter />
     </head>
     <body class="bg-main text-main">

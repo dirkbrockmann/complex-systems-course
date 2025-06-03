@@ -5,15 +5,14 @@ seo:
   title: Contact Information
   description: Here's all the information you need to get in touch.
 ---
-import MarginNote from "../../components/MarginNote.astro"
-import MarginFigure from "../../components/MarginFigure.astro"
-import dirk from '../../assets/generated/dirk_transparent.png';
 import dirkDark from '../../assets/generated/dirk_dark.png';
+import dirk from '../../assets/generated/dirk_transparent.png';
+import Figure from "../../components/Figure.astro";
+import MarginNote from "../../components/MarginNote.astro";
 
-
-<MarginFigure src={dirk} srcDark={dirkDark} alt="Dirk Brockmann">
+<Figure src={dirk} srcDark={dirkDark} alt="Dirk Brockmann" margin={true}>
 **Your instructor:** Dirk Brockmann.
-</MarginFigure>
+</Figure>
 Here's some information about your instructor, in case you need to get in touch and keep being updated about the course.
 
 ## Emails
