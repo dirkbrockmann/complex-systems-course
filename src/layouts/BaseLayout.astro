@@ -57,11 +57,11 @@ const { showHeader = true, ...head } = Astro.props;
 
         <ClientRouter />
     </head>
-    <body class="bg-main text-main">
+    <body class="bg-main text-main sm:px-14">
         <div class="flex flex-col min-h-screen px-4 md:px-8">
             <Nav />
             {showHeader && <Header />}
-            <main class="grow w-full max-w-5xl mx-auto">
+            <main class="grow w-full max-w-6xl mx-auto">
                 <slot />
             </main>
             <Footer />

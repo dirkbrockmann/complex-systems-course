@@ -89,12 +89,12 @@ export default function Fig4({id}) {
             .style("stroke-width",4)
             .style("fill","none")
 
-        controls.selectAll("*").data(g.points).enter().append("circle")
-            .attr("class","grid")
-            .attr("transform",function(d) {return "translate(" + d.x + "," + d.y + ")"})
-            .attr("r",1)
-            .style("fill","black")
-            .style("stroke","none")
+        // controls.selectAll("*").data(g.points).enter().append("circle")
+        //     .attr("class","grid")
+        //     .attr("transform",function(d) {return "translate(" + d.x + "," + d.y + ")"})
+        //     .attr("r",1)
+        //     .style("fill","black")
+        //     .style("stroke","none")
 
 
         return () => {
