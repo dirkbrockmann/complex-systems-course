@@ -3,8 +3,8 @@ export default {
         class: "explorable flex flex-col items-center",
     },
     display: {
-        width: 500,
-        height: 500,
+        width: 600,
+        height: 600,
         class: "gront w-[50%] mb-0 h-auto",
         margin: {l: 20,r: 50,t: 20,b: 50},
         fontsize: "20px",
@@ -20,8 +20,8 @@ export default {
         }
     },
     plot: {
-        width: 500,
-        height: 500,
+        width: 600,
+        height: 600,
         class: "mb-0 w-[50%] h-auto",
         margin: {l: 50,r: 30,t: 20,b: 50},
         fontsize: "20px",

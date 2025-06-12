@@ -6,3 +6,7 @@ export function nextMarginNoteNumber() {
 export function resetMarginNoteCounter() {
     count = 0;
 }
+export function getMarginNoteCounter() {
+    return count;
+}
+

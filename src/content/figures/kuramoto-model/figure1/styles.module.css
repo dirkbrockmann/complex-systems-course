@@ -1,0 +1,22 @@
+
+.agent {
+    stroke:black;
+    stroke-width:1px;
+    fill:lightgrey;
+}
+
+.big_circle{
+    fill:none;
+    stroke:black;
+    stroke-width:1px
+}
+
+@media (prefers-color-scheme: dark) {
+    .agent {
+        stroke:white;
+    }
+    .big_circle{
+        fill:none;
+        stroke:white;
+    }
+}

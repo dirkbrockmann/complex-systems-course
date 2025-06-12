@@ -1,0 +1,7 @@
+---
+import { getMarginNoteNumber } from '../../utils/margin-note-registry.js';
+const { id } = Astro.props;
+const number = getMarginNoteNumber(id);
+---
+
+<sup id={'ref-' + number} class="align-text-top text-xs -ml-3 mr-1">{number}</sup>
