@@ -1,8 +1,4 @@
-// Complexity Explorable: Albert and Carl Friedrich
-
-
-
-import {config,load} from '@explorables/albert_and_carl_friedrich';
+import {config,load} from '@explorables/ride_my_kuramotocycle';
 import * as d3 from 'd3';
 import {useEffect,useRef} from 'react';
 
@@ -18,12 +14,10 @@ export default ({id}) => {
     useEffect(() => {
 
         if(containerRef.current) {
-
             load(containerRef.current.id);
         }
         return () => {
             d3.select('#' + containerRef.current.id).selectAll('*').remove(); // Clean up the container
-
         };
     },[id]);
 

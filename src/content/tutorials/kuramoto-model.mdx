@@ -11,5 +11,392 @@ seo:
 
 import Explorable from '../../components/Explorable.astro';
 import Figure from '../../components/Figure.astro';
+import * as Margin from '../../components/MarginNote';
+import metroDark from '../../assets/generated/metro_dark.png';
+import metro from '../../assets/generated/metro_transparent.png';
+import wcDark from '../../assets/generated/wc_dark.png';
+import wc from '../../assets/generated/wc_transparent.png';
+import kuraf1Dark from '../../assets/generated/kuraf1_dark.png';
+import kuraf1 from '../../assets/generated/kuraf1_transparent.png';
+import kuraf2Dark from '../../assets/generated/kuraf2_dark.png';
+import kuraf2 from '../../assets/generated/kuraf2_transparent.png';
+import Fig1 from '../../content/figures/kuramoto-model/figure1';
+import Fig2 from '../../content/figures/kuramoto-model/figure2';
+import Fig3 from '../../content/figures/kuramoto-model/figure3';
+import Fig4 from '../../content/figures/kuramoto-model/figure4';
+import Fig5 from '../../content/figures/kuramoto-model/figure5';
 
-## This tutorial will be available soon!
+
+
+
+In this script we discuss the [**Kuramoto Model**](https://en.wikipedia.org/wiki/Kuramoto_model). It is probably the most famous model for the emergence of synchronization in phase coupled oscillators. It was introduced in 1975 by [**Yoshiki Kuramoto**](https://en.wikipedia.org/wiki/Yoshiki_Kuramoto).
+
+<Figure src={metro} srcDark={metroDark} alt="Complexity." margin={true}>
+**You can do this:** A simple experiment for spontaneous synchronization:"
+  caption="Five metronomes, placed on a board that can wobble on two empty cans. Many times this experiment has been repeated.
+</Figure>
+
+
+Although it is conceptually extremely simple, in captures the basic mechanism of spontaneous synchronization of interacting oscillators, it explains why synchronization sometimes occurs and sometimes doesn't. Despite it's formal simplicity it hold a number of unexpected surprises when many oscillators are involved. One such surprise is the existence of so called [**chimera states**](https://journals.aps.org/prl/abstract/10.1103/PhysRevLett.93.174102) in which in a large set of oscillators a subset synchronizes perfectly while others fail to do so.
+
+When the Kuramoto model is discussed in the literature, one often begins with the equations, followed by an intuitive and plausible interpretation which is perfectly fine. Yet, when that is done I feel it masks how the equations can be derived from scratch, following the guidelines of simplicity and plausibility. So, in the discussion below we will try to start from scratch and pay a bit more attention to the construction of the model. So, bear with me.
+
+## Introduction
+
+First, let's think about oscillators. The defining feature of an oscillator is the repetition of behavior. So we have a dynamic state of the system that repeats and repeats and repeats. Nature abounds in processes that are oscillatory, rhythmic or repetitive. 
+
+
+<Figure src={wc} srcDark={wcDark} alt="Complexity." margin={false}>
+**Rhythms:** If you ask a dozen students of biology to each provide five examples of systems that are oscillatory / rhythmic they come up with these examples. Interestingly, heart rate, seasons and circadian rhythms are most frequently reported.
+</Figure>
+
+
+If we think of systems that change their state continuously in time and that the state of the system at any time $t$ can be described by an $N$-dimensional state vector $\mathbf X(t)=(X_1(t),...,X_N(t))$ rhythmic / oscillatory / periodic behavior means that
+
+$$
+\mathbf X(t) = \mathbf X(t+T).
+$$
+
+So after a period $T$ the state is where it started off and begins the journey along the periodic trajectory again. Geometrically you can think of the periodic motion as curve in the $N$-dimensional state space. This geometric idea is very helpful. Because it means that we can geometrically map the periodic trajectory, even if it looks complicated and potentially with a weird shape in state space onto a nicely shape circle, with every point on the periodic trajectory corresponding to a point on the circle. Just like we can have a rubberband shaped in weird ways to be reshaped into a nice circular shape. No matter what weird shape the rubber band is in, it remains a circular object.
+
+
+<Explorable id="figure_1" margin={true}>    
+    Three simple oscillators that move in a circle at three different but constant angular velocities $\omega$.
+    <Fig1 slot="figure" client:load id="oscillator"/>
+</Explorable>
+
+
+So in a sense, the geometry of the problem isn't important, rather the fraction of the period $T$ that has passed. And that fraction of the period we are going to call **the phase** $\theta(t)$ of an oscillator.
+
+Thinking again of the periodic behavior in the simplest way possible, that of a point moving around a circle (the radius of which doesn't matter), the phase is just the angle, say with the x-axis. Where we place $\theta=0$ doesn't matter, because frankly, a circle doesn't have a beginning or an end.
+
+### The Phase
+
+**So, bottomline:** An oscillator can be described, abstractly, as an angle variable $\theta(t)$ that moves around a circle. It doesn't have to do it at a constant speed. In some circle regions it could move faster than in others. It could even come to a stop (stretching the idea of an oscillator a bit).
+
+Because we have this motion on a circle, it also means that the motion has no beginning and no end. If we want to measure the state, and attach a number to it, we need to set a point on the circle that corresponds to $\theta=0$, as mentioned earlier. If we embed the circle in the plane with our conventional placement of $x$- and $y$-axis, the beginning is usually placed at the cartesian point $(1,0)$ and increasing $\theta$ is happening in the counterclockwise way<Margin.Cite id="eimer"/>. 
+<Margin.Note>
+<Margin.Ref id="eimer"/>It is a convention to define the angle with respect to the x-axis and increasing the angle means moving the state in a counterclockwise fashion. Pure convention. You could start anywhere and move in any direction. 
+</Margin.Note>
+
+This is all very straightforward. An oscillator performs dynamics on a ring. Yet there are a few traps connected to the fact that a ring has no beginning and no end. Formally, we let 
+$$
+\theta\in [0,2\pi)
+$$
+So, when we do algebra with angles like the state $\theta$ we need to be careful. So for instance if by an algebraic operation we jump over the boundary at $0$. If, e.g., we say $\theta=359\degree$ and define an increment $\delta\theta=5\degree$ the sum
+$$
+\theta+\delta\theta = 4\degree
+$$
+which would suggest that $\delta\theta=-355\degree$. But of course on a circle $-355\degree=5\degree$. We just have to keep that in mind. Seems trivial, but could lead to mistakes if one doesn't keep it in mind.
+
+Here's an example that illustrates it. Let's say we have two angles $\theta_1=50\degree$ and $\theta_2=80\degree$ and we would like to compute the average of both angles:
+$$
+\left< \theta\right>=\frac{1}{2}(\theta_1+\theta_2)
+$$
+As expected we get $\left< \theta\right>=65\degree$ which, on the circle this is halfway between both angles. The difference between the angles in this case
+
+$$
+\theta_2-\theta_1=30\degree
+$$
+
+Let's compute the average of two angles $\theta_1=350\degree$ and $\theta_2=20\degree$. 
+This amounts to $\left< \theta\right>=185\degree$.
+This is a little odd because, the average is no longer half way between the original angles along the short ring segment. It's excactly opposite, in the middle of the segment that we get if we walk from $\theta_2$ to $\theta_1$.
+
+Well, this might be the correct answer, but maybe not. It depends on what we mean by **average** angle. If we want the answer to be the angle of the line that goes through the midpoint of the arc that we get if we walk from $\theta_1$ to $\theta_2$, it's not the correct answer<Margin.Cite id="wurm" />. 
+
+<Margin.Note>
+<Margin.Ref id="wurm" />One way of solving this without having to worry about the weird numerical discontinuity of the angle $\theta$ in computing averages is going back to Cartesian Coordinates. So let's say we have a set of angles $\theta_n$, with $n=1,...,N$ and we want to compute the average we can form the vectors $(\cos\theta_n,\sin\theta_n)$, compute the averages of the $x$- and $y$-components
+$$
+\left< x\right>=\frac{1}{N}\sum_n \cos\theta_n
+$$
+$$
+\left< y\right>=\frac{1}{N}\sum_n \sin\theta_n
+$$
+and then compute the angle of the resulting 2-d-vector $(\left< x\right>,\left< y\right>)$ according to
+$$
+\left< \theta\right>=\tan^{-1}(\left< y\right>/\left<x\right>)
+$$
+That works.
+</Margin.Note>
+
+**Bottomline:** Be careful with algebra on a ring.
+
+### The simplest oscillator
+
+So the most simple oscillator is one that has a constant speed of moving around the circle:
+
+$$
+\dot{\theta} = \omega 
+$$
+
+The angular $\omega$ speed is also known as the  (angular) frequency. The solution is of course
+$$
+\theta(t)=\theta(0)+\omega t\quad\text{mod}\quad 2\pi.
+$$
+
+the mod $2\pi$ is there to make sure that values that exceed $2\pi$ are mapped back in to the valid range of angles $[0,2\pi)$.
+
+### A slightly more complex oscillator
+
+Here's an oscillator that is slightly more complicated
+
+$$
+\dot{\theta} = \omega + A\sin^2(2\theta) \qquad A,\omega>0
+$$
+
+This is an oscillator that is sometimes fast, and sometimes slow. You can play with this in the **panel on the right**.
+
+<Explorable id="figure_2" margin={true}>    
+    **Wobbly oscillators:** These are oscillators that are described by the dynamical system $\dot{\theta} = \omega + A\sin^2(2\theta)$. Depending on where they are on the circle, their angular speed varies. If you lower the parameter $A$ to zero, everything will advances at constant angular speed.
+    <Fig2 slot="figure" client:load id="weird_oscillator"/>
+</Explorable>
+
+
+
+### Interacting oscillators
+
+Now we are going to start thinking about interacting oscillators. So first let's assume we have $N$ oscillators, each with a natural frequency $\omega_n$, $n=1,...,N$. If they are all independent and not interacting we would have
+
+$$
+\dot\theta_n=\omega_n
+$$
+
+Now, we assume that they are all interacting, so each oscillator experiences a "force" that depends on the state of all the other oscillators:
+
+$$
+\dot{\theta}_n=\omega_n + f_n(\theta_1,...,\theta_N)
+$$
+
+**Note:** Each oscillator can have it's own function $f_n$. Before we start a general discussion it is useful to keep it simple at first and just consider....
+
+### ....two oscillators
+
+In this case we have
+
+$$
+\dot{\theta}_1=\omega_1 + f_1(\theta_1,\theta_2)
+$$
+
+$$
+\dot{\theta}_2=\omega_2 + f_2(\theta_1,\theta_2)
+$$
+
+Each oscillator moves forward with its own natural frequency $\omega_i$. 
+The force of oscillator $2$ exerted on $1$ is defined by the function $f_1$, the force of oscillator $1$ exerted on $2$ is defined by function $f_2$. In general we have
+
+$$
+f_1\neq f_2.
+$$ 
+
+But let's assume (keeping things as simple as possible), that the interaction between oscillators is symmetric, actio=reactio. That implies that we have
+
+$$
+f_1 = f_2 = f,
+$$ 
+
+and moreover
+
+$$
+\dot{\theta}_1=\omega_1 + f(\theta_1,\theta_2)
+$$
+
+$$
+\dot{\theta}_2=\omega_2 + f(\theta_2,\theta_1)
+$$
+
+Note in the above equations we have only one force function on the right, and that the angle variables are flipped. In other words, the oscillators are identical, if we flip the indices, the labels of the oscillators nothing changes.
+
+Now we introduce another type of symmetry. We assume that the interaction doesn't care
+about where the oscillators are on the ring, only that relative "positions count". So for example if I rotate all oscillators by a fixed angle, that shouldn't matter. That implies that the interaction can only depend on phase differences:
+
+$$
+\dot{\theta}_1=\omega_1 + f(\theta_2-\theta_1)
+$$
+
+$$
+\dot{\theta}_2=\omega_2 + f(\theta_1-\theta_2)
+$$
+
+<Figure src={kuraf1} srcDark={kuraf1Dark} alt="Kuramoto Model 1" margin={true}>
+**Fig. 1:** The force function in the model for two oscillators should be positive for values in the first half of the interval, and negative in the larger half.
+</Figure>
+
+
+Now we need to think about what kind of force could yield synchronization. Let's assume for a second that $\theta_2>\theta_1$ and that a "walk" from $\theta_1$ to $\theta_2$ along the circle is a shorter circular segment than walking from $\theta_2$ to $\theta_1$. This means it would make sense that oscillator $1$ would try to catch up to oscillator $2$. Likewise oscillator $2$ should slow down a bit. Because the angular distance $\theta_2-\theta_1$ falls into the range $[0,\pi]$ in this case, we would like the function $f(\theta_2-\theta_1)>0$. because the speed of oscillator $1$ is increased and becomes larger than the natural frequency $\omega_1$. Now if $\pi>\theta_2-\theta_1>0$ we also have $-\pi< \theta_1-\theta_2< 0$. And if we assume that 
+$f(\theta_1-\theta_2)< 0$ if the argument is negative, then this also means that oscillator $2$ is slowed down.
+
+So that's all we need we assume that
+$$
+f(x)>0\qquad\text{if}\qquad0< x < \pi
+$$
+
+$$
+f(x)<0\qquad\text{if}\qquad-\pi< x < 0
+$$
+
+We can rewrite this because we have agreed to define angles in the range $[0,2\pi)$ and the negative range corresponds to the range $[\pi,2\pi)$. In summary, we well design a model with a force function that looks like the one depicted in **Fig. 1**.
+
+
+Now we assume that the function $f(x)$ is continuous. So we connect the branches of the function at $0 (2\pi)$ and $\pi$, see **Fig. 2**.
+
+<Figure src={kuraf2} srcDark={kuraf2Dark} alt="Kuramoto Model 2" margin={true}>
+**Fig. 2:** he coupling function $f$ should be continuous.
+</Figure>
+
+Now we finally come to the last assumption. We will pick a function that is as simple as possible and fulfills the above requirements. If you look at **Fig.2** you will probably guess that a good candidate is the **sine-function**. So that is what we will use:
+
+$$
+\dot{\theta}_1=\omega_1 + \frac{K}{2}\sin(\theta_2-\theta_1)
+$$
+
+$$
+\dot{\theta}_2=\omega_2 + \frac{K}{2}\sin(\theta_1-\theta_2)
+$$
+
+There is an additional parameter $K>0$ that captures the strength of the interaction, that also corresponds to the amplitude of the sine-function. The reason for the $1/2$ will become clear in a bit.
+
+We can now make this a bit simpler by looking at the rate of change of the difference in angles
+$$
+x=\theta_2-\theta_1.
+$$
+The rate of change of this difference can be computed, it's just $\dot x=\dot\theta_2-\dot\theta_1$. We get <Margin.Cite id="kuramoto" />:
+<Margin.Note>
+<Margin.Ref id="kuramoto" />Here we used the fact that $-\sin(x)=\sin(-x)$ and let $\delta\omega=\omega_2-\omega_1$. 
+</Margin.Note>
+$$
+\dot x = \delta\omega - K\sin(x)
+$$
+
+
+The new parameter $\delta\omega=\omega_2-\omega_1$ is just the difference in natural frequencies of both oscillators. Without loss of generality we assume that this parameter is non-negative, so $\delta\omega\geq0$.
+
+Now we have a one-dimensional dynamical systems of the form $\dot x=F(x)$ which we can analyze using the techniques described in the script 
+
+[**One-dimensional dynamical systems**](/tutorials/one-d-dynamical-systems)
+
+So that means we plot the function $f(x)$ and find the fixpoints, so the points $x^\star$ that fulfill $f(x^\star)=0$.
+
+Let's look at the system first when $\delta\omega=0$ which implies that both oscillators have identical natural frequencies $\omega_1=\omega_2$. In this case we have 
+$$
+\dot x = - K\sin(x)
+$$
+So we see that if we draw the negative sinus (remember that $K>0$) we get two fixpoints, one at $x^\star=0$ and the other at $x^\star=\pi$. And we see that the fixpoint at zero is stable and the one at $\pi$ is unstable, irrespective of the coupling strength $K$. So that means, no matter how small the coupling, as long as it exists the oscillators wil synchronize. Why? Because a fixpoint $x=0$ means that the phase difference doesn't change and is zero, because remember that 
+$$
+x=\theta_2-\theta_1.
+$$
+So the system will approach a state in which both oscillators are moving around the circle at their natural frequencies $\omega=\omega_1=\omega_2$ and they also have identical phases as they move around. Perfect synchrony.
+
+Now let's see what happens if $\delta\omega>0$ so oscillator $2$ has a larger natural frequency than oscillator $1$, so without interaction it moves around the circle faster.
+
+When we analyze this graphically we see that the curve $f(x)$ at $x=0$ has a height along the $y$-axis of $\delta\omega$. The sine part has an amplitude of $K$. So that means we have two possible outcomes:
+
+If
+$$
+K>\delta\omega
+$$
+the curve crosses the $x$-axis at two points, one point a little smaller than $\pi/2$ the other one a little to the right of $\pi/2$. And we see that the point to the left is a stable fixpoint, the point to the right is unstable.
+
+Analytically we can compute the two fixpoints, it's the solution to
+$$
+x^\star=\alpha=\sin^{-1}(\delta\omega/K)
+$$
+
+Dynamically this means that at the fixpoint the phase difference
+
+$$
+\theta _ 2-\theta_1=\alpha>0
+$$
+
+which means that
+$$
+\theta _ 2=\theta_1+\alpha
+$$
+so the oscillator with a higher natural frequency is leading the slower one, but the phase difference remains constant in the stationary solution of $x$. So both oscillators move around the circle at a constant speed with a fixed phase difference. Much like two watches that have the same speed, but show slightly different times.
+
+What is the speed at which both oscillators move around?
+
+In the stationary state the rate of change of oscillator $1$ is given by
+$$
+\dot\theta_1=\omega_1+\frac{K}{2}\sin(\theta_2-\theta_1)
+$$
+so
+$$
+\dot\theta_1=\omega_1++\frac{K}{2}\sin(\sin^{-1}(\delta\omega/K))
+$$
+which means
+$$
+\dot\theta_1=\omega_1++\frac{K}{2}\frac{\omega_2-\omega_1}{K}
+$$
+so
+$$
+\dot\theta_1=\frac{\omega_1+\omega_2}{2}
+$$
+
+In other words the rate of change of the first oscillator in the stationary state is the average of the natural frequencies of both oscillators. 
+
+It's a good practice problem to show that this is also the case for the second oscillator.
+
+Now what happens if 
+$$
+K<\delta\omega?
+$$
+
+In this case the function $f(x)$ is positive on the entire range of $[0,2\pi)$. So the phase difference is always increasing (modulo $2\pi$) and no fixpoints exists. The oscillators will never synchronize.
+
+<Explorable id="figure_3" margin={false}>    
+    **Analysis of the Kuramoto Model for two oscillators:**
+  Change the parameters and explore the conditions for the existence of fixpoints and sychronization. The blue dot represents the stable fixpoint, the red one the unstable fixpoint. Arrows on the x-axis symbolize which way the dynamical systems moves.
+    <Fig3 slot="figure" client:load id="kuramoto_dynamical_system"/>
+</Explorable>
+
+### Summary
+
+- if both oscillators have identical natural frequencies $\delta\omega=0$, they always synchronize with zero phase difference $\alpha=0$.
+- if the natural frequencies differ the oscillators synchronize only for a coupling that is larger than a critical value $K_c=\delta\omega$.
+- if they synchronize they have a phase difference $\alpha=\sin^{-1}(\delta\omega/K)$.
+- in the asymptotically stable state the rate of change of both oscillators is the same and identical to the mean of their natural frequency.
+
+
+## Many oscillators
+
+Naturally, the next step is considering many coupled oscillators. The generalization of the two-oscillator model comes naturally. We just assume that any pair of oscillators exert a force on each other that is identical to the two-oscillator system. So given two oscillators labeld by $n$ and $m$ with phase variables $\theta_n$ and $\theta_m$ we assume the force exerted on $n$ by $m$ is given by
+$$
+K_{nm}\propto K_{nm}\sin(\theta_m-\theta_n).
+$$
+Now we assume that in general all oscillators have their own natural frequencies $\omega_n$ and that the forces exerted by oscillators on each other can be added. This then yields
+$$
+\dot\theta_n=\omega_n+\frac{1}{N}\sum_{m\neq n}K_{nm}\sin(\theta_m-\theta_n).
+$$
+
+This defines the Kuramoto Model for many oscillators. The interaction matrix $K_{nm}$ defines the interactions between oscillators.
+
+It turns out that despite the simplicity of this model, it is quite rich in dynamical behaviors it can exhibit and it is very difficult to compute conditions for synchronization in general. Some special systems have been analyzed in more detail, for example the coupling between oscillators is identical
+
+$$
+K_{nm}=K
+$$
+
+## Complexity Explorables based on the Kuramoto Model
+
+But even the system with uniform coupling exhibits interesting, unexpected properties if the natural frequencies differ. You can explore this using the Complexity Explorable
+
+
+<Explorable id="figure_4" margin={false}>    
+    Synchronization of phase-coupled oscillators in the Kuramoto Model. This is the Complexity Exporable [**“Ride my Kuramotocycle!”**](https://www.complexity-explorables.org/explorables/ride-my-kuramotocycle/) _Synchronization of Phase-Coupled Oscillators_. If you want more information go to the Complexity Exporable website: [www.complexity-explorables.org](https://www.complexity-explorables.org).
+    <Fig4 slot="figure" client:load id="ride_my_kuramoto_cycle"/>
+</Explorable>
+
+
+
+Another well studied version of the Kuramoto model is a system in which oscillators are arranged on a square lattice, and each oscillator is interacting only with its immediate neighbors. You can explore that system with the Complexity Exporable
+
+<Explorable id="figure_6" margin={false}>    
+    In this simulation, phase coupled oscillators are arranged on a square lattice. Each oscillator interacts with its immediate neighbors. This is the Complexity Exporable [**“Spin Wheels”**](https://www.complexity-explorables.org/explorables/spin-wheels/) _Phase-coupled oscillators on a lattice_. If you want more information go to the Complexity Exporable website: [www.complexity-explorables.org](https://www.complexity-explorables.org).
+    <Fig5 slot="figure" client:load id="spinwheels"/>
+</Explorable>
+
+
+
+
+

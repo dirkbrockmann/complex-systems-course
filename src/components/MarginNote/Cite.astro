@@ -1,0 +1,9 @@
+---
+import { getMarginNoteNumber } from '../../utils/margin-note-registry.js';
+const { id } = Astro.props;
+const number = getMarginNoteNumber(id);
+---
+
+<sup>
+    <a href={'#marginnote-' + id} class="align-text-top text-xs">{number}</a>
+</sup>

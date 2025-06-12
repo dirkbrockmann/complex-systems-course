@@ -1,6 +1,6 @@
 export default {
     container: {
-        class: "flex flex-col ",
+        class: "flex flex-col",
     },
     display: {
         width: 300,

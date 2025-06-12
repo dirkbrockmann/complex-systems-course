@@ -1,87 +1,42 @@
-// Ornstein-Uhlenbeck process
-
-
 import * as d3 from 'd3';
 import * as widgets from 'd3-widgets';
-import {each,last,map,range} from 'lodash-es';
+import {each,map,range} from 'lodash-es';
 import {useEffect,useRef} from 'react';
 import config from './config.js';
 import styles from './styles.module.css';
 
 const loadExplorable = (displayContainer,controlsContainer) => {
 
-
-    const dt = 0.01; // Time step
-    const N = 10;
-    const Tmax = config.plot.xr[1]; // Maximum time
-    var xr = config.plot.xr;
-    const yr = config.plot.yr;
-
-    const X = d3.scaleLinear().domain(xr).range([config.plot.margin.l,config.display.width - config.plot.margin.r]);
-    const Y = d3.scaleLinear().domain(yr).range([config.display.height - config.plot.margin.b,config.plot.margin.t]);
-    const xAxis = d3.axisBottom(X);
-    const yAxis = d3.axisLeft(Y);
-    const curve = d3.line().x(d => X(d.t)).y(d => Y(d.X));
-
-    var agents = [];
-    var ticks = 0;
-    var timer = {};
-    const dw = d3.randomNormal(0,1);
-
     const g = widgets.grid(config.controls.width,config.controls.height,config.controls.grid.x,config.controls.grid.y);
     const display = d3.select(displayContainer)
     const controls = d3.select(controlsContainer)
 
-    const iterate = () => {
-        ticks++;
-        let k = sliders[1].value();
-        let sigma = sliders[0].value();
+    const N = 8; // Number of agents
+    const L = config.plot.L; // Length of the display area
+    const margin = config.plot.margin; // Margin for the plot
+    var timer = {};
+    var t = 0;
+    var dt = 0.01;
 
-        each(agents,(d) => {
-            let t = last(d.trajectory).t;
-            let X = last(d.trajectory).X;
-            d.trajectory.push({t: t + dt,X: X - k * dt * X + Math.sqrt(sigma * dt) * dw()})
-            if(ticks > Tmax / dt / 2) {
-                d.trajectory.shift();
-            }
-        })
+    var X = d3.scaleLinear().domain([-L / 2,L / 2]).range([margin,config.display.width - margin]);
+    var Y = d3.scaleLinear().domain([-L / 2,L / 2]).range([margin,config.display.height - margin]);
 
-        if(ticks > Tmax / dt / 2) {
-            xr = [xr[0] + dt,xr[1] + dt];
-            X.domain(xr);
-            display.select("#xaxis").call(xAxis);
+
+    const agents = map(range(N),(a,i) => {
+        let theta = 2 * Math.PI * Math.random();
+        return {
+            theta: theta,
+            omega: 3 + 2 * i,
+            x: Math.cos(theta),
+            y: Math.sin(theta)
         }
+    })
 
-        display.selectAll("." + styles.agent).data(agents).attr("d",d => curve(d.trajectory))
-
-
-    }
-    const reset = () => {
-        ticks = 0
-        agents = map(range(N),(d,i) => ({id: i,trajectory: [{t: 0,X: 0}]}))
-
-
-        xr = config.plot.xr;
-        X.domain(xr);
-        display.select("#xaxis").call(xAxis);
-
-
-        display.selectAll("." + styles.agent).remove();
-
-        display.selectAll("." + styles.agent).data(agents).enter().append("path")
-            .attr("d",d => curve(d.trajectory))
-            .attr("class",styles.agent)
-            .classed(styles.singular,d => d.id == 0)
-
-    }
-
-    const buttons = map(config.widgets.buttons,
-        v => widgets.button()
-            .id(v.id)
-            .value(v.value)
-            .actions(v.actions)
-            .position(g.position(v.position.x,v.position.y))
-    );
+    const button = widgets.button()
+        .id(config.widgets.button.id)
+        .value(config.widgets.button.value)
+        .actions(config.widgets.button.actions)
+        .position(g.position(config.widgets.button.position.x,config.widgets.button.position.y));
 
     const sliders = map(config.widgets.sliders,
         v => widgets.slider()
@@ -96,28 +51,42 @@ const loadExplorable = (displayContainer,controlsContainer) => {
             .position(g.position(v.position.x,v.position.y))
     );
 
-    reset();
+    const iterate = () => {
+        each(agents,a => {
+            a.theta += dt * (sliders[0].value() + sliders[1].value() * Math.sin(2 * a.theta) * Math.sin(2 * a.theta));;
+            a.x = Math.cos(a.theta);
+            a.y = Math.sin(a.theta);
+        })
+        display.selectAll("." + styles.agent)
+            .attr("transform",function(d) {
+                return "translate(" + X(L / 2 * Math.cos(d.theta)) + "," + Y(L / 2 * Math.sin(d.theta)) + ")"
+            })
+    }
 
 
-    function go(d) {buttons[0].value() == 1 ? timer = d3.timer(iterate,0) : timer.stop();}
 
-    buttons[0].update(go);
-    buttons[1].update(reset);
 
-    controls.selectAll(null).data(buttons).enter().append(widgets.widget);
+    const go = (d) => {button.value() == 1 ? timer = d3.timer(iterate,0) : timer.stop();}
+
+    button.update(go)
+
+    controls.selectAll(null).data([button]).enter().append(widgets.widget);
     controls.selectAll(null).data(sliders).enter().append(widgets.widget);
 
-    display.append("g").datum(config.plot.xaxis).attr("class",styles.axis)
-        .attr("id","xaxis")
-        .attr("transform",function(d) {return "translate(0," + Y(0) + ")"})
-        .call(xAxis)
-        .style("font-size",config.plot.xaxis.fontsize);
+    display.append("circle").attr("r",0.5 * (config.display.width - 2 * margin))
+        .attr("class",styles.big_circle)
+        .attr("transform","translate(" + X(0) + "," + Y(0) + ")")
 
-    display.append("g").datum(config.plot.yaxis).attr("class",styles.axis)
-        .attr("transform",function(d) {return "translate(" + X(0) + ",0)"})
-        .call(yAxis)
-        .style("font-size",config.plot.xaxis.fontsize);
+    display.selectAll("." + styles.agent).data(agents).enter().append("circle")
+        .attr("class",styles.agent)
+        .attr("r",config.plot.agentsize)
+        .attr("transform",function(d) {
+            return "translate(" + X(L / 2 * Math.cos(d.theta)) + "," + Y(L / 2 * Math.sin(d.theta)) + ")"
+        })
 
+
+
+    display.append("g").attr("class","grid")
 
 
     // controls.selectAll("*").data(g.points).enter().append("circle")
@@ -133,7 +102,6 @@ const loadExplorable = (displayContainer,controlsContainer) => {
         display.selectAll("*").remove(); // Remove all circles from the second SVG
     };
 }
-
 export default ({id}) => {
     const ContainerRef = useRef(null); // Ref for the first div
     const displayContainerRef = useRef(null); // Ref for the first div
@@ -142,7 +110,6 @@ export default ({id}) => {
     useEffect(() => {
 
         return loadExplorable(displayContainerRef.current,controlsContainerRef.current);
-
 
     },[id]); // Add `id` as a dependency to ensure it updates if the prop changes
 

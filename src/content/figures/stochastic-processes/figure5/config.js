@@ -50,7 +50,7 @@ export default {
         ]
     },
     plot: {
-        margin: {l: 30,r: 30,t: 10,b: 30},
+        margin: {l: 40,r: 30,t: 10,b: 30},
         xr: [0,10],
         yr: [-5,5],
         xaxis: {

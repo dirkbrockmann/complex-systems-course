@@ -98,6 +98,7 @@ html.dark {
     
     .prose {
         @apply font-serif font-medium md:w-[65%] text-xl;
+        hyphens: auto;
     }
 
     .prose a {
@@ -110,11 +111,13 @@ html.dark {
 
     .prose figure figcaption p {
         @apply text-left text-base/5;
+        hyphens: auto;
     }
 
-    .prose .marginnote
+    .prose .marginnote, .prose .marginnote p
      {
         @apply text-left text-base/5;
+        hyphens: auto;
     }
     
     .prose :where(ul, ol) {
@@ -145,3 +148,6 @@ html.dark {
 	    font-size: 1.0em;
 }
 
+.explorable .d3-widgets {
+        
+}

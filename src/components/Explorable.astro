@@ -1,9 +1,9 @@
 ---
 // filepath: /Users/zwerg/Coding/astro/dante/src/components/Explorable.astro
-const { id, margin = false, className = 'p-0' } = Astro.props;
+const { id, margin = false, className = 'p-0 explorable' } = Astro.props;
 ---
 
-<figure class={margin ? 'm-0 md:mr-[-53%] md:float-right md:clear-end md:w-[53%] px-6 not-prose' : 'm-0 not-prose'}>
+<figure class={margin ? 'm-0 md:mr-[-53%] md:float-right md:clear-end md:w-[53%] px-6 not-prose' : 'm-0 not-prose my-12'}>
     {
         !margin && (
             <figcaption class="hidden md:block md:mr-[-53%] md:float-right md:clear-end md:w-[53%] px-6">
