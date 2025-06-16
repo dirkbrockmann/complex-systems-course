@@ -1,0 +1,23 @@
+---
+// filepath: /Users/zwerg/Coding/astro/dante/src/components/Link.astro
+import type { HTMLAttributes } from 'astro/types';
+
+type Props = HTMLAttributes<'a'>;
+
+const { href, class: className, ...props } = Astro.props;
+
+// Check if the link is internal (starts with "/")
+const isInternal = href && href.startsWith('/');
+// Get the base path from Astro's environment variable, remove trailing slash
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+// Prefix internal links with base, leave external links unchanged
+const finalHref = isInternal ? `${base}${href}` : href;
+
+// Get the current page's path for active link styling
+const { pathname } = Astro.url;
+const isActive = isInternal && (href === pathname || href === pathname.replace(/\/$/, ''));
+---
+
+<a class:list={[className, { 'underline underline-offset-2 decoration-1': isActive }]} href={finalHref} {...props}>
+    <slot />
+</a>

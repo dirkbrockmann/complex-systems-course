@@ -1,5 +1,5 @@
-import type { ImageMetadata } from 'astro:assets';
-import { default as complexityImg, default as heroImg } from '../assets/complexity.png';
+import type {ImageMetadata} from 'astro:assets';
+import {default as complexityImg, default as heroImg} from '../assets/complexity.png';
 import authorImg from '../assets/dirk.png';
 import logoDark from '../assets/generated/logo_dark.png';
 import logoLight from '../assets/logo.png';
@@ -53,19 +53,20 @@ export type SiteConfig = {
 
 const siteConfig: SiteConfig = {
     logo: {
-        src: logoLight,
+        src: logoLight.src,
         alt: 'SynoSys'
     },
     logoDark: {
-        src: logoDark,
+        src: logoDark.src,
         alt: 'SynoSys (Dark)'
     },
-    website: 'https://synosys.github.io/teaching/complex-systems-biology/',
+    website: 'https://dirkbrockmann.github.io/',
+    base: '/complexity-course/',
     title: 'Introduction to Complex Systems in Biology (and Beyond)',
     author: {
         name: 'Dirk Brockmann',
         image: {
-            src: authorImg,
+            src: authorImg.src,
             alt: 'Dirk Brockmann'
         },
         url: 'https://synosys.github.io'
@@ -73,7 +74,7 @@ const siteConfig: SiteConfig = {
     subtitle: 'A course by Dirk Brockmann',
     description: '',
     image: {
-        src: complexityImg,
+        src: complexityImg.src,
         alt: 'Complex Systems in Biology'
     },
     headerNavLinks: [

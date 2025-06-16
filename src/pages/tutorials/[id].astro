@@ -1,11 +1,12 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import Link from '../../components/Link.astro';
+import PageLayout from '../../layouts/PageLayout.astro';
 import { sortItemsByDateDesc } from '../../utils/data-utils';
 
 export async function getStaticPaths() {
     const projects = (await getCollection('tutorials')).sort(sortItemsByDateDesc);
-    const projectCount = projects.length;
+
     return projects.map((tutorial) => ({
         params: { id: tutorial.id },
         props: {
@@ -19,17 +20,10 @@ type Props = {
 };
 
 const { tutorial } = Astro.props;
-const { title, description, seo } = tutorial.data;
+const { title, seo } = tutorial.data;
 const { Content } = await render(tutorial);
 ---
 
-<BaseLayout title={seo?.title ?? title} description={seo?.description ?? description} image={seo?.image} pageType="article" showHeader={false}>
-    <article class="mb-16 sm:mb-24">
-        <header class="mb-8">
-            <h1 class="text-3xl leading-tight font-serif font-medium sm:text-5xl sm:leading-tight">{title}</h1>
-        </header>
-        <div class="max-w-none prose sm:prose-lg">
-            <Content />
-        </div>
-    </article>
-</BaseLayout>
+<PageLayout title={title} seo={seo} showHeader={false}>
+    <Content components={{ a: Link }} />
+</PageLayout>

@@ -101,6 +101,10 @@ html.dark {
         hyphens: auto;
     }
 
+    .wide {
+        @apply md:w-full ;
+    }
+
     .prose a {
         @apply underline font-semibold decoration-1 underline-offset-2 decoration-solid hover:decoration-dashed;
     }

@@ -1,13 +1,17 @@
 ---
 import { type CollectionEntry, getCollection, render } from 'astro:content';
+import Link from '../components/Link.astro';
 import PageLayout from '../layouts/PageLayout.astro';
 
 export async function getStaticPaths() {
     const pages = await getCollection('pages');
-    return pages.map((page) => ({
-        params: { id: page.id },
-        props: { page }
-    }));
+    return pages.map((page) => {
+        const segments = page.id === 'index' ? '' : page.id;
+        return {
+            params: { id: segments },
+            props: { page }
+        };
+    });
 }
 
 type Props = { page: CollectionEntry<'pages'> };
@@ -18,5 +22,5 @@ const { Content } = await render(page);
 ---
 
 <PageLayout title={title} seo={seo} image={image} showHeader={showHeader}>
-    <Content />
+    <Content components={{ a: Link }} />
 </PageLayout>
