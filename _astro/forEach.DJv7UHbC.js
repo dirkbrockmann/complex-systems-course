@@ -1,0 +1,1 @@
+import{i as f,c,d as r}from"./map.q80aMCoh.js";function u(n,i){for(var t=-1,e=n==null?0:n.length;++t<e&&i(n[t],t,n)!==!1;);return n}function o(n){return typeof n=="function"?n:f}function a(n,i){var t=r(n)?u:c;return t(n,o(i))}export{a as f};
