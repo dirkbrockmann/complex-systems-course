@@ -4,7 +4,7 @@
     "description": "A course on complex systems in biology, including topics like agent-based modeling, pattern formation, complex networks, synchronization, and more.",
     "license": "CC-BY-4.0",
     "author": "Dirk Brockmann",
-    "homepage": "https://synosys.github.io/teaching/complex-systems-course/",
+    "homepage": "https://synosys.github.io/complex-systems-course/",
     "repository": {
         "type": "git",
         "url": "https://github.com/dirkbrockmann/complex-systems-course.git",
@@ -15,7 +15,8 @@
         "start": "astro dev",
         "build": "astro build",
         "preview": "astro preview",
-        "astro": "astro"
+        "astro": "astro",
+        "deploy": "astro build && gh-pages -d dist --dotfiles"
     },
     "dependencies": {
         "@astrojs/mdx": "^4.2.3",
@@ -48,6 +49,7 @@
     },
     "devDependencies": {
         "@tailwindcss/typography": "^0.5.16",
+        "gh-pages": "^6.3.0",
         "prettier": "^3.5.3",
         "prettier-plugin-tailwindcss": "^0.6.11"
     }

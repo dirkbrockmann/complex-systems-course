@@ -11,11 +11,12 @@ export type Props = {
     pageType?: 'website' | 'article';
 };
 
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const { description = '', image = siteConfig.image, pageType = 'website' } = Astro.props;
 const title = [Astro.props.title, siteConfig.title].filter(Boolean).join(' | ');
 const resolvedImage = image?.src
     ? {
-          src: new URL(image.src, Astro.site).toString(),
+          src: new URL(`${base}${image.src}`, Astro.site).toString(),
           alt: image.alt
       }
     : undefined;
