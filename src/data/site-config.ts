@@ -61,7 +61,7 @@ const siteConfig: SiteConfig = {
         alt: 'SynoSys (Dark)'
     },
     website: 'https://dirkbrockmann.github.io/',
-    base: '/complexity-course/',
+    base: '/complex-systems-course/',
     title: 'Introduction to Complex Systems in Biology (and Beyond)',
     author: {
         name: 'Dirk Brockmann',

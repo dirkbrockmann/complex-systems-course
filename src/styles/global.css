@@ -102,7 +102,7 @@ html.dark {
     }
 
     .wide {
-        @apply md:w-full ;
+        @apply md:w-full md:max-w-4xl ;
     }
 
     .prose a {

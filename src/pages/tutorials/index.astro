@@ -5,7 +5,7 @@ import TutorialPreview from '../../components/TutorialPreview.astro';
 import ListLayout from '../../layouts/ListLayout.astro';
 import { sortItemsByDateDesc } from '../../utils/data-utils';
 
-const tutorials = (await getCollection('tutorials')).sort(sortItemsByDateDesc);
+const tutorials = (await getCollection('tutorials')).filter((tutorial) => !tutorial.data.draft).sort(sortItemsByDateDesc);
 const preamble = await getEntry('pages', 'tutorial-index');
 const { title, seo, image, showHeader } = preamble.data;
 const { Content } = await render(preamble);
