@@ -1,4 +1,5 @@
 ---
+showHeader: true
 title: Terms of Service
 seo:
   title: Terms of Service

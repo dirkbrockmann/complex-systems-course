@@ -2,10 +2,10 @@
 [cc-by-image]: https://i.creativecommons.org/l/by/4.0/88x31.png
 [cc-by-shield]: https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg
 
-# Introduction to Complex Systems in Biology (and Beyond)
+# Introduction to Complex Systems
 
 This repo contains the information to build the site
-for the complex systems course.
+for the complex systems course for the Bachelor Program.
 
 ## License
 

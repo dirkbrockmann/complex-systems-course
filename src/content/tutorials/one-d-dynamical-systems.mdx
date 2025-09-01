@@ -1,11 +1,12 @@
 ---
+draft: true
 id: one-d-dynamical-systems
 title: 'One-dimensional dynamical systems'
 description: 'This tutorial introduces one-dimensional dynamical systems, focusing on the stability of fixed points and the behavior of trajectories in phase space.'
 publishDate: '2025-06-02'
 seo:
   image:
-    src: '/complexity.png'
+    src: '/complexity_transparent.png'
     alt: Project preview
 ---
 
@@ -84,7 +85,7 @@ container of molecules of type $A$ and when two molecules collide
 they annihilate and disappear like so:
 
 $$
-A+A\xrightarrow{\alpha}\emptyset
+A+A\xrightarrow{ \alpha }\emptyset
 $$
 
 Let's assume that initially ($t=t_{0}$) we have some amount of molecules
@@ -106,7 +107,7 @@ that the smaller it gets, the smaller the expected change in $x(t)$.
 If we assume this we can write
 
 $$
-x(t+\Delta t)\approx x(t)+\Delta t\\,f(x(t))
+x(t+\Delta t)\approx x(t)+\Delta t f(x(t))
 $$
 
 so the state of the system shortly after our reference time $t$ is
@@ -114,7 +115,7 @@ the old state plus a change that is proportional to $\Delta t$. The
 proportionality constant is $f(x(t))$ which may depend on the state
 we are in. This then naturally yields
 $$
-\lim_{\Delta t\rightarrow0}\frac{x(t+\Delta t)-x(t)}{\Delta t}=\frac{dx}{dt}=f(x)
+\lim_{\Delta t\rightarrow 0}\frac{x(t+\Delta t)-x(t)}{\Delta t}=\frac{dx}{dt}=f(x)
 $$
 
 which we write has
@@ -162,12 +163,12 @@ $$
 
 which yields the ODE:
 $$
-\dot{x}=-\alpha x^{2}.
+\dot{x}=-\alpha x^ {2}.
 $$
 
 We can solve this directly by separation of variables
 $$
--\frac{dx}{\alpha x^{2}}=dt
+-\frac{dx}{\alpha x^ {2}}=dt
 $$
 
 and integrating
@@ -191,7 +192,7 @@ A+A\rightarrow\emptyset
 $$
  and the spontaneous reproduction reaction
 $$
-A\rightarrow2A.
+A\rightarrow 2A.
 $$
 We can see already that the second reaction can generate new molecules.
 Alternatively, we can think of organisms here. Individuals can reproduce
@@ -324,7 +325,7 @@ ones are not.
 
 We also see an important defining feature of stability. ***A stable fixpoint
 is one in which the derivative of $f(x)$ is negative at the fixpoint***
-whereas ***when $f\^{\prime}(x)$ is positive, the fixpoint is unstable.*** We can
+whereas ***when $f^{\prime}(x)$ is positive, the fixpoint is unstable.*** We can
 check this for the above example
 $$
 f(x)=x(\beta-\alpha x)
@@ -347,7 +348,7 @@ which confirms our idea.
 Here's another example: Let's say we have a dynamical system given
 by
 $$
-\dot{x}=a+bx+\frac{1}{2}cx\^2+\frac{1}{6}dx\^3
+\dot{x}=a+bx+\frac{1}{2}cx^2+\frac{1}{6}dx^3
 $$
 {/* {{< explorable
   jsfunc="bifu_cubic"
@@ -594,12 +595,12 @@ $$
 $$
 is equivalent to
 $$
-f(x)=(\alpha-\beta)x-\alpha x\^{2}
+f(x)=(\alpha-\beta)x-\alpha x^{2}
 $$
  
 It has a potential
 $$
-V(x)=-\frac{\alpha-\beta}{2}x\^{2}+\frac{\alpha}{3}x\^{3}.
+V(x)=-\frac{\alpha-\beta}{2}x^{2}+\frac{\alpha}{3}x^{3}.
 $$
 This concept can be generalized to more than one dimension and will
 be very helpful understanding the dynamics of a nonlinear dynamical

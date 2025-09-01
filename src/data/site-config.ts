@@ -1,5 +1,5 @@
 import type {ImageMetadata} from 'astro:assets';
-import {default as complexityImg, default as heroImg} from '../assets/complexity.png';
+import {default as complexityImg} from '../assets/complexity.png';
 import authorImg from '../assets/dirk.png';
 import logoDark from '../assets/generated/logo_dark.png';
 import logoLight from '../assets/logo.png';
@@ -62,7 +62,7 @@ const siteConfig: SiteConfig = {
     },
     website: 'https://dirkbrockmann.github.io/',
     base: '/complex-systems-course/',
-    title: 'Introduction to Complex Systems in Biology (and Beyond)',
+    title: 'Introduction to Complex Systems',
     author: {
         name: 'Dirk Brockmann',
         image: {
@@ -71,7 +71,7 @@ const siteConfig: SiteConfig = {
         },
         url: 'https://synosys.github.io'
     },
-    subtitle: 'A course by Dirk Brockmann',
+    subtitle: 'Module M0500-31W20, WiSe 2025/25',
     description: '',
     image: {
         src: complexityImg.src,
@@ -82,14 +82,19 @@ const siteConfig: SiteConfig = {
             text: 'Home',
             href: '/'
         },
-        // {
-        //     text: 'Projects',
-        //     href: '/projects'
-        // },
-        // {
-        //     text: 'Blog',
-        //     href: '/blog'
-        // },
+
+        {
+            text: 'TL;DR',
+            href: '/tldr'
+        },
+        {
+            text: 'Seminar',
+            href: '/seminar'
+        },
+        {
+            text: 'Lab Course',
+            href: '/lab'
+        },
         {
             text: 'Tutorials',
             href: '/tutorials'
@@ -124,14 +129,7 @@ const siteConfig: SiteConfig = {
         }
     ],
 
-    hero: {
-        title: 'Welcome!',
-        text: "brüllafen alarm ist auch was schönes, vor allem morgens",
-        image: {
-            src: heroImg,
-            alt: 'A person sitting at a desk in front of a computer'
-        }
-    },
+
     postsPerPage: 8,
     projectsPerPage: 8
 };
